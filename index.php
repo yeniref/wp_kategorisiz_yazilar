@@ -54,7 +54,19 @@ class Uncategorized_Posts_Table extends WP_List_Table {
                   GROUP BY wp_posts.ID";
 
         $this->set_pagination_args(array(
-            'total_items' => $wpdb->get_var("SELECT COUNT(ID) FROM {$wpdb->posts}"),
+            'total_items' => $wpdb->get_var("SELECT COUNT(DISTINCT wp_posts.ID) AS total_count
+            FROM {$wpdb->posts} AS wp_posts
+            LEFT JOIN {$wpdb->term_relationships} AS wp_term_relationships 
+            ON (wp_posts.ID = wp_term_relationships.object_id)
+            LEFT JOIN {$wpdb->terms} AS wp_terms ON (wp_term_relationships.term_taxonomy_id = wp_terms.term_id)
+            LEFT JOIN {$wpdb->term_taxonomy} AS wp_term_taxonomy ON (wp_terms.term_id = wp_term_taxonomy.term_id)
+            LEFT JOIN {$wpdb->term_relationships} AS wp_tag_relationships 
+            ON (wp_posts.ID = wp_tag_relationships.object_id)
+            LEFT JOIN {$wpdb->terms} AS wp_tags ON (wp_tag_relationships.term_taxonomy_id = wp_tags.term_id)
+            LEFT JOIN {$wpdb->users} AS wp_users ON (wp_posts.post_author = wp_users.ID)
+            WHERE wp_term_relationships.term_taxonomy_id IS NULL
+            AND wp_posts.post_type = 'post'
+            AND wp_posts.post_status = 'publish'"),
             'per_page'    => 20
         ));
 

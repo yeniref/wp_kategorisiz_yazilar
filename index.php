@@ -66,7 +66,7 @@ class Uncategorized_Posts_Table extends WP_List_Table {
     function column_default($item, $column_name) {
         switch ($column_name) {
             case 'title':
-                return $item->post_title;
+                return "<h3>".$item->post_title."</h3>";
             case 'author':
                 return $item->author;
             case 'categories':

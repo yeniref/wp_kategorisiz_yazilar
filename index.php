@@ -58,9 +58,6 @@ class Uncategorized_Posts_Table extends WP_List_Table {
             'per_page'    => 20
         ));
 
-       Kalan kodu aşağıdaki gibi tamamlayabilirsiniz:
-
-```php
         $this->_column_headers = array($this->get_columns(), array(), array());
 
         $this->items = $wpdb->get_results($query);
